@@ -50,6 +50,7 @@ class SubCategory(models.Model):
 class Brand(models.Model):
     name = models.CharField(max_length=100, unique=True)
     slug = models.SlugField(max_length=100, unique=True, blank=True)
+    url = models.URLField(max_length=500, blank=True, null=True)
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
     active = models.BooleanField(default=True)
@@ -104,6 +105,16 @@ class Product(models.Model):
     title = models.CharField(max_length=500)
     slug = models.SlugField(max_length=500, unique=True, blank=True)
     description = models.TextField()
+    
+    # SEO and Meta Fields
+    page_header = models.CharField(max_length=255, blank=True, null=True, help_text="SEO-optimized page header")
+    meta_description = models.TextField(max_length=160, blank=True, null=True, help_text="Meta description for search engines")
+    meta_keywords = models.CharField(max_length=500, blank=True, null=True, help_text="Comma-separated keywords for SEO")
+    open_graph_meta_description = models.TextField(max_length=200, blank=True, null=True, help_text="Description for social media sharing")
+    
+    # Product Details
+    product_features = models.JSONField(default=list, blank=True, help_text="List of product features")
+    product_tags = models.CharField(max_length=500, blank=True, null=True, help_text="Social media hashtags and tags")
     
     # Price information
     price = models.DecimalField(max_digits=10, decimal_places=2)
@@ -173,6 +184,20 @@ class Product(models.Model):
     def featured_video(self):
         featured_vid = self.videos.filter(is_featured=True).first()
         return featured_vid.video if featured_vid else None
+
+    @property
+    def formatted_features(self):
+        """Return product features as a formatted string"""
+        if self.product_features:
+            return ', '.join(self.product_features)
+        return ''
+
+    @property
+    def meta_keywords_list(self):
+        """Return meta keywords as a list"""
+        if self.meta_keywords:
+            return [keyword.strip() for keyword in self.meta_keywords.split(',')]
+        return []
 
 
 class ProductImage(models.Model):
