@@ -1,6 +1,8 @@
 .venv*
 db
 data
+staticfiles
+media
 **/__pycache__
 
 
