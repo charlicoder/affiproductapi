@@ -10,7 +10,12 @@ SECRET_KEY = config("SECRET_KEY", cast=str)
 
 DEBUG = config("DEBUG", cast=bool)
 
-ALLOWED_HOSTS = ["*"]
+ALLOWED_HOSTS = [
+    "51.112.205.54",
+    "api.charlicoder.com",
+    "api.charlicoder.cc",
+    "127.0.0.1:8000",
+]
 
 
 # Application definition

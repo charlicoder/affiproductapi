@@ -1,0 +1,13 @@
+[Unit]
+Description=Uvicorn instance to serve AffiProductAPI
+After=network.target
+
+[Service]
+User=ubuntu
+Group=www-data
+WorkingDirectory=/home/ubuntu/affiproductapi
+ExecStart=/home/ubuntu/affiproductapi/.venv/bin/gunicorn --access-logfile - --workers 3 --bind unix:/home/ubuntu/affiproductapi/affproductapi.sock core.wsgi:application
+
+[Install]
+WantedBy=multi-user.target
+EOF
