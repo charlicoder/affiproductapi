@@ -14,7 +14,7 @@ ALLOWED_HOSTS = [
     "51.112.205.54",
     "api.charlicoder.com",
     "api.charlicoder.cc",
-    "127.0.0.1:8000",
+    "127.0.0.1",
 ]
 
 
@@ -118,9 +118,6 @@ STATIC_URL = "static/"
 STATICFILES_DIRS = [BASE_DIR / "static"]
 STATIC_ROOT = BASE_DIR / "staticfiles"
 
-# Default primary key field type
-# https://docs.djangoproject.com/en/5.2/ref/settings/#default-auto-field
-
 DEFAULT_AUTO_FIELD = "django.db.models.BigAutoField"
 
 
@@ -150,10 +147,6 @@ REST_FRAMEWORK = {
 }
 
 # CORS settings (if you need cross-origin requests)
-CORS_ALLOWED_ORIGINS = [
-    "http://localhost:3000",  # React app
-    "http://127.0.0.1:3000",
-    # Add your frontend URLs here
-]
+CORS_ALLOWED_ORIGINS = ["http://localhost:3000", "http://127.0.0.1:3000"]  # React app
 
 CORS_ALLOW_CREDENTIALS = True
