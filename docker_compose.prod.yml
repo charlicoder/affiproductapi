@@ -16,7 +16,7 @@ services:
     depends_on:
       - redis
     volumes:
-      - static_volume:/app/staticfiles
+      - .staticfiles:/app/staticfiles
       - media_volume:/app/media
     networks:
       - app-network
