@@ -171,6 +171,7 @@ class Command(BaseCommand):
             "product_asin": product_asin,
             "title": title,
             "description": data.get("description", ""),
+            "af_link": data.get("af_link"),
             "price": price,
             "regular_price": regular_price,
             "cost_savings": cost_savings,
