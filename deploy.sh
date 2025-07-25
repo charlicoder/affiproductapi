@@ -15,7 +15,7 @@ echo ">>> Activating virtual environment"
 source "$VENV_DIR/bin/activate"
 
 echo ">>> Installing dependencies (optional)"
-pip install -r requirements.txt
+pip install -r requirements/prod.txt
 
 # echo ">>> Running Django migrations"
 # python manage.py migrate --noinput
