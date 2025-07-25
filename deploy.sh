@@ -24,6 +24,7 @@ echo ">>> Collecting static files"
 python manage.py collectstatic --noinput
 
 echo ">>> Restarting Gunicorn and Nginx"
+sudo systemctl daemon-reload
 sudo systemctl restart "$GUNICORN_SERVICE"
 sudo systemctl restart nginx
 
