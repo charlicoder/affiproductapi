@@ -4,7 +4,7 @@ set -e  # Exit on any error
 
 # CONFIGURE THESE PATHS
 PROJECT_DIR="/home/ubuntu/affiproductapi"
-VENV_DIR="$PROJECT_DIR/venv"
+VENV_DIR="$PROJECT_DIR/.venv"
 GUNICORN_SERVICE="affiproductapi"  # Your gunicorn systemd service name
 
 echo ">>> Updating codebase"
