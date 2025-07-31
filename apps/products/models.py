@@ -107,7 +107,7 @@ class Product(models.Model):
     title = models.CharField(max_length=500)
     slug = models.SlugField(max_length=500, unique=True, blank=True)
     description = models.TextField()
-    af_link = models.URLField(blank=True, null=True)
+    af_link = models.URLField(blank=True, null=True, max_length=500)
 
     # SEO and Meta Fields
     page_header = models.CharField(

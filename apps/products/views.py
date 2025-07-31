@@ -1,3 +1,4 @@
+from django.http import Http404
 from rest_framework import viewsets, status, filters
 from rest_framework.decorators import action
 from rest_framework.response import Response
@@ -108,14 +109,15 @@ class ProductViewSet(viewsets.ModelViewSet):
     ViewSet for Product operations
     """
     queryset = Product.objects.select_related(
-        'brand', 'category', 'sub_category', 'platform'
+        'brand', 'category', 'sub_category', 'platform',
     ).prefetch_related('tags', 'images', 'videos').filter(
         published=True, active=True
     )
-    
+
     filter_backends = [DjangoFilterBackend, filters.OrderingFilter]
     ordering_fields = ['created_at', 'updated_at', 'price', 'rating', 'title']
     ordering = ['-created_at']
+    lookup_field = 'slug'  # Use slug as the default lookup field
 
     def get_serializer_class(self):
         if self.action == 'list':
@@ -128,21 +130,28 @@ class ProductViewSet(viewsets.ModelViewSet):
         queryset = self.queryset
         return ProductFilter.filter_queryset(queryset, self.request.query_params)
 
-    def retrieve(self, request, pk=None):
-        """Get product by ID or slug"""
+    def retrieve(self, request, slug=None):
+        """Get product by slug"""
         try:
-            if pk.replace('-', '').replace('_', '').isalnum() and len(pk) > 10:
-                # Likely a slug
-                product = get_object_or_404(self.get_queryset(), slug=pk)
-            else:
-                # Likely an ID
-                product = get_object_or_404(self.get_queryset(), pk=pk)
-            
+            product = get_object_or_404(self.get_queryset(), slug=slug)
             serializer = self.get_serializer(product)
             return Response(serializer.data)
-        except:
+        except Http404:
             return Response(
-                {'error': 'Product not found'}, 
+                {'error': 'Product not found'},
+                status=status.HTTP_404_NOT_FOUND
+            )
+
+    @action(detail=False, methods=['get'], url_path='by-id/(?P<product_id>[^/.]+)')
+    def by_id(self, request, product_id=None):
+        """Get product by ID (fallback method)"""
+        try:
+            product = get_object_or_404(self.get_queryset(), pk=product_id)
+            serializer = self.get_serializer(product)
+            return Response(serializer.data)
+        except Http404:
+            return Response(
+                {'error': 'Product not found'},
                 status=status.HTTP_404_NOT_FOUND
             )
 
@@ -151,12 +160,12 @@ class ProductViewSet(viewsets.ModelViewSet):
         """Get featured products"""
         queryset = self.get_queryset().filter(featured=True)
         queryset = ProductFilter.filter_queryset(queryset, request.query_params)
-        
+
         page = self.paginate_queryset(queryset)
         if page is not None:
             serializer = ProductListSerializer(page, many=True, context={'request': request})
             return self.get_paginated_response(serializer.data)
-        
+
         serializer = ProductListSerializer(queryset, many=True, context={'request': request})
         return Response(serializer.data)
 
@@ -167,12 +176,12 @@ class ProductViewSet(viewsets.ModelViewSet):
             Q(category__slug=category_slug) | Q(category__name__iexact=category_slug)
         )
         queryset = ProductFilter.filter_queryset(queryset, request.query_params)
-        
+
         page = self.paginate_queryset(queryset)
         if page is not None:
             serializer = ProductListSerializer(page, many=True, context={'request': request})
             return self.get_paginated_response(serializer.data)
-        
+
         serializer = ProductListSerializer(queryset, many=True, context={'request': request})
         return Response(serializer.data)
 
@@ -180,16 +189,16 @@ class ProductViewSet(viewsets.ModelViewSet):
     def by_subcategory(self, request, subcategory_slug=None):
         """Get products by subcategory"""
         queryset = self.get_queryset().filter(
-            Q(sub_category__slug=subcategory_slug) | 
+            Q(sub_category__slug=subcategory_slug) |
             Q(sub_category__name__iexact=subcategory_slug)
         )
         queryset = ProductFilter.filter_queryset(queryset, request.query_params)
-        
+
         page = self.paginate_queryset(queryset)
         if page is not None:
             serializer = ProductListSerializer(page, many=True, context={'request': request})
             return self.get_paginated_response(serializer.data)
-        
+
         serializer = ProductListSerializer(queryset, many=True, context={'request': request})
         return Response(serializer.data)
 
@@ -200,12 +209,12 @@ class ProductViewSet(viewsets.ModelViewSet):
             Q(brand__slug=brand_slug) | Q(brand__name__iexact=brand_slug)
         )
         queryset = ProductFilter.filter_queryset(queryset, request.query_params)
-        
+
         page = self.paginate_queryset(queryset)
         if page is not None:
             serializer = ProductListSerializer(page, many=True, context={'request': request})
             return self.get_paginated_response(serializer.data)
-        
+
         serializer = ProductListSerializer(queryset, many=True, context={'request': request})
         return Response(serializer.data)
 
@@ -216,12 +225,12 @@ class ProductViewSet(viewsets.ModelViewSet):
             Q(platform__slug=platform_slug) | Q(platform__name__iexact=platform_slug)
         )
         queryset = ProductFilter.filter_queryset(queryset, request.query_params)
-        
+
         page = self.paginate_queryset(queryset)
         if page is not None:
             serializer = ProductListSerializer(page, many=True, context={'request': request})
             return self.get_paginated_response(serializer.data)
-        
+
         serializer = ProductListSerializer(queryset, many=True, context={'request': request})
         return Response(serializer.data)
 

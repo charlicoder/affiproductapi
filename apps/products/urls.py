@@ -20,11 +20,5 @@ router.register(r"tags", TagViewSet, basename="tag")
 app_name = "products"
 
 urlpatterns = [
-    path("", include(router.urls)),
-    # Alternative URL patterns for SEO-friendly URLs
-    path(
-        "products/slug/<slug:slug>/",
-        ProductViewSet.as_view({"get": "retrieve"}),
-        name="product-detail-slug",
-    ),
+    path("", include(router.urls))
 ]

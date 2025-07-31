@@ -101,7 +101,7 @@ class Command(BaseCommand):
 
     def process_product(self, data, platform, update_existing):
         """Process a single product from JSON data"""
-
+        # pdb.set_trace()
         # Extract basic info
         product_asin = data.get("product_asin", "").strip()
         if not product_asin:
