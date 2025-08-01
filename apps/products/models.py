@@ -6,8 +6,8 @@ import uuid
 
 
 class Category(models.Model):
-    name = models.CharField(max_length=100, unique=True)
-    slug = models.SlugField(max_length=100, unique=True, blank=True)
+    name = models.CharField(max_length=500, unique=True)
+    slug = models.SlugField(max_length=500, unique=True, blank=True)
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
     active = models.BooleanField(default=True)
@@ -26,11 +26,11 @@ class Category(models.Model):
 
 
 class SubCategory(models.Model):
-    name = models.CharField(max_length=100)
+    name = models.CharField(max_length=500)
     category = models.ForeignKey(
         Category, on_delete=models.CASCADE, related_name="subcategories"
     )
-    slug = models.SlugField(max_length=100, blank=True)
+    slug = models.SlugField(max_length=500, blank=True)
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
     active = models.BooleanField(default=True)
@@ -50,9 +50,9 @@ class SubCategory(models.Model):
 
 
 class Brand(models.Model):
-    name = models.CharField(max_length=100, unique=True)
-    slug = models.SlugField(max_length=100, unique=True, blank=True)
-    url = models.URLField(max_length=500, blank=True, null=True)
+    name = models.CharField(max_length=500, unique=True)
+    slug = models.SlugField(max_length=500, unique=True, blank=True)
+    url = models.URLField(max_length=1000, blank=True, null=True)
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
     active = models.BooleanField(default=True)
@@ -107,7 +107,7 @@ class Product(models.Model):
     title = models.CharField(max_length=500)
     slug = models.SlugField(max_length=500, unique=True, blank=True)
     description = models.TextField()
-    af_link = models.URLField(blank=True, null=True, max_length=500)
+    af_link = models.URLField(blank=True, null=True, max_length=1000)
 
     # SEO and Meta Fields
     page_header = models.CharField(
