@@ -6,15 +6,15 @@ import uuid
 
 
 class Category(models.Model):
-    name = models.CharField(max_length=100, unique=True)
-    slug = models.SlugField(max_length=100, unique=True, blank=True)
+    name = models.CharField(max_length=500, unique=True)
+    slug = models.SlugField(max_length=500, unique=True, blank=True)
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
     active = models.BooleanField(default=True)
 
     class Meta:
         verbose_name_plural = "Categories"
-        ordering = ['name']
+        ordering = ["name"]
 
     def __str__(self):
         return self.name
@@ -26,17 +26,19 @@ class Category(models.Model):
 
 
 class SubCategory(models.Model):
-    name = models.CharField(max_length=100)
-    category = models.ForeignKey(Category, on_delete=models.CASCADE, related_name='subcategories')
-    slug = models.SlugField(max_length=100, blank=True)
+    name = models.CharField(max_length=500)
+    category = models.ForeignKey(
+        Category, on_delete=models.CASCADE, related_name="subcategories"
+    )
+    slug = models.SlugField(max_length=500, blank=True)
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
     active = models.BooleanField(default=True)
 
     class Meta:
         verbose_name_plural = "Sub Categories"
-        unique_together = ['name', 'category']
-        ordering = ['name']
+        unique_together = ["name", "category"]
+        ordering = ["name"]
 
     def __str__(self):
         return f"{self.category.name} - {self.name}"
@@ -48,15 +50,15 @@ class SubCategory(models.Model):
 
 
 class Brand(models.Model):
-    name = models.CharField(max_length=100, unique=True)
-    slug = models.SlugField(max_length=100, unique=True, blank=True)
-    url = models.URLField(max_length=500, blank=True, null=True)
+    name = models.CharField(max_length=500, unique=True)
+    slug = models.SlugField(max_length=500, unique=True, blank=True)
+    url = models.URLField(max_length=1000, blank=True, null=True)
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
     active = models.BooleanField(default=True)
 
     class Meta:
-        ordering = ['name']
+        ordering = ["name"]
 
     def __str__(self):
         return self.name
@@ -105,44 +107,79 @@ class Product(models.Model):
     title = models.CharField(max_length=500)
     slug = models.SlugField(max_length=500, unique=True, blank=True)
     description = models.TextField()
-    
+    af_link = models.URLField(blank=True, null=True, max_length=1000)
+
     # SEO and Meta Fields
-    page_header = models.CharField(max_length=255, blank=True, null=True, help_text="SEO-optimized page header")
-    meta_description = models.TextField(max_length=160, blank=True, null=True, help_text="Meta description for search engines")
-    meta_keywords = models.CharField(max_length=500, blank=True, null=True, help_text="Comma-separated keywords for SEO")
-    open_graph_meta_description = models.TextField(max_length=200, blank=True, null=True, help_text="Description for social media sharing")
-    
+    page_header = models.CharField(
+        max_length=255, blank=True, null=True, help_text="SEO-optimized page header"
+    )
+    meta_description = models.TextField(
+        max_length=160,
+        blank=True,
+        null=True,
+        help_text="Meta description for search engines",
+    )
+    meta_keywords = models.CharField(
+        max_length=500,
+        blank=True,
+        null=True,
+        help_text="Comma-separated keywords for SEO",
+    )
+    open_graph_meta_description = models.TextField(
+        max_length=200,
+        blank=True,
+        null=True,
+        help_text="Description for social media sharing",
+    )
+
     # Product Details
-    product_features = models.JSONField(default=list, blank=True, help_text="List of product features")
-    product_tags = models.CharField(max_length=500, blank=True, null=True, help_text="Social media hashtags and tags")
-    
+    product_features = models.JSONField(
+        default=list, blank=True, help_text="List of product features"
+    )
+    product_tags = models.CharField(
+        max_length=500,
+        blank=True,
+        null=True,
+        help_text="Social media hashtags and tags",
+    )
+
     # Price information
     price = models.DecimalField(max_digits=10, decimal_places=2)
-    regular_price = models.DecimalField(max_digits=10, decimal_places=2, null=True, blank=True)
-    cost_savings = models.DecimalField(max_digits=5, decimal_places=2, null=True, blank=True)
+    regular_price = models.DecimalField(
+        max_digits=10, decimal_places=2, null=True, blank=True
+    )
+    cost_savings = models.DecimalField(
+        max_digits=5, decimal_places=2, null=True, blank=True
+    )
     discount_percent = models.CharField(max_length=10, null=True, blank=True)
     savings_percent = models.CharField(max_length=10, null=True, blank=True)
-    
+
     # Rating
     rating = models.DecimalField(
-        max_digits=3, 
-        decimal_places=2, 
+        max_digits=3,
+        decimal_places=2,
         validators=[MinValueValidator(0), MaxValueValidator(5)],
-        null=True, 
-        blank=True
+        null=True,
+        blank=True,
     )
-    
+
     # Relationships
-    brand = models.ForeignKey(Brand, on_delete=models.CASCADE, related_name='products')
-    platform = models.ForeignKey(Platform, on_delete=models.CASCADE, related_name='products')
-    category = models.ForeignKey(Category, on_delete=models.CASCADE, related_name='products')
-    sub_category = models.ForeignKey(SubCategory, on_delete=models.CASCADE, related_name='products')
-    tags = models.ManyToManyField(Tag, blank=True, related_name='products')
-    
+    brand = models.ForeignKey(Brand, on_delete=models.CASCADE, related_name="products")
+    platform = models.ForeignKey(
+        Platform, on_delete=models.CASCADE, related_name="products"
+    )
+    category = models.ForeignKey(
+        Category, on_delete=models.CASCADE, related_name="products"
+    )
+    sub_category = models.ForeignKey(
+        SubCategory, on_delete=models.CASCADE, related_name="products"
+    )
+    tags = models.ManyToManyField(Tag, blank=True, related_name="products")
+
     # Shipping and returns
     shipping = models.CharField(max_length=200, null=True, blank=True)
     returns = models.CharField(max_length=200, null=True, blank=True)
-    
+
     # Status fields
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
@@ -151,14 +188,14 @@ class Product(models.Model):
     featured = models.BooleanField(default=False)
 
     class Meta:
-        ordering = ['-created_at']
+        ordering = ["-created_at"]
         indexes = [
-            models.Index(fields=['slug']),
-            models.Index(fields=['product_asin']),
-            models.Index(fields=['brand']),
-            models.Index(fields=['category']),
-            models.Index(fields=['sub_category']),
-            models.Index(fields=['published', 'active']),
+            models.Index(fields=["slug"]),
+            models.Index(fields=["product_asin"]),
+            models.Index(fields=["brand"]),
+            models.Index(fields=["category"]),
+            models.Index(fields=["sub_category"]),
+            models.Index(fields=["published", "active"]),
         ]
 
     def __str__(self):
@@ -189,19 +226,21 @@ class Product(models.Model):
     def formatted_features(self):
         """Return product features as a formatted string"""
         if self.product_features:
-            return ', '.join(self.product_features)
-        return ''
+            return ", ".join(self.product_features)
+        return ""
 
     @property
     def meta_keywords_list(self):
         """Return meta keywords as a list"""
         if self.meta_keywords:
-            return [keyword.strip() for keyword in self.meta_keywords.split(',')]
+            return [keyword.strip() for keyword in self.meta_keywords.split(",")]
         return []
 
 
 class ProductImage(models.Model):
-    product = models.ForeignKey(Product, on_delete=models.CASCADE, related_name='images')
+    product = models.ForeignKey(
+        Product, on_delete=models.CASCADE, related_name="images"
+    )
     image = models.URLField(max_length=500)
     alt_text = models.CharField(max_length=200, blank=True)
     is_featured = models.BooleanField(default=False)
@@ -210,7 +249,7 @@ class ProductImage(models.Model):
     updated_at = models.DateTimeField(auto_now=True)
 
     class Meta:
-        ordering = ['order', '-is_featured', 'created_at']
+        ordering = ["order", "-is_featured", "created_at"]
 
     def __str__(self):
         return f"{self.product.title[:50]} - Image {self.id}"
@@ -218,15 +257,16 @@ class ProductImage(models.Model):
     def save(self, *args, **kwargs):
         # Ensure only one featured image per product
         if self.is_featured:
-            ProductImage.objects.filter(
-                product=self.product, 
-                is_featured=True
-            ).exclude(id=self.id).update(is_featured=False)
+            ProductImage.objects.filter(product=self.product, is_featured=True).exclude(
+                id=self.id
+            ).update(is_featured=False)
         super().save(*args, **kwargs)
 
 
 class ProductVideo(models.Model):
-    product = models.ForeignKey(Product, on_delete=models.CASCADE, related_name='videos')
+    product = models.ForeignKey(
+        Product, on_delete=models.CASCADE, related_name="videos"
+    )
     video = models.URLField(max_length=500)
     title = models.CharField(max_length=200, blank=True)
     is_featured = models.BooleanField(default=False)
@@ -235,7 +275,7 @@ class ProductVideo(models.Model):
     updated_at = models.DateTimeField(auto_now=True)
 
     class Meta:
-        ordering = ['order', '-is_featured', 'created_at']
+        ordering = ["order", "-is_featured", "created_at"]
 
     def __str__(self):
         return f"{self.product.title[:50]} - Video {self.id}"
@@ -243,8 +283,7 @@ class ProductVideo(models.Model):
     def save(self, *args, **kwargs):
         # Ensure only one featured video per product
         if self.is_featured:
-            ProductVideo.objects.filter(
-                product=self.product, 
-                is_featured=True
-            ).exclude(id=self.id).update(is_featured=False)
+            ProductVideo.objects.filter(product=self.product, is_featured=True).exclude(
+                id=self.id
+            ).update(is_featured=False)
         super().save(*args, **kwargs)
