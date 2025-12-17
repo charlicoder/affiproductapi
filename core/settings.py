@@ -11,10 +11,8 @@ SECRET_KEY = config("SECRET_KEY", cast=str)
 DEBUG = config("DEBUG", cast=bool)
 
 ALLOWED_HOSTS = [
-    "51.112.205.54",
-    "api.charlicoder.com",
-    "api.charlicoder.cc",
     "127.0.0.1",
+    "localhost",
 ]
 
 
@@ -69,12 +67,12 @@ WSGI_APPLICATION = "core.wsgi.application"
 
 DATABASES = {
     "default": {
-        "ENGINE": "django.db.backends.postgresql",
-        "NAME": config("DB_NAME"),
-        "USER": config("DB_USER"),
-        "PASSWORD": config("DB_PASSWORD"),
-        "HOST": config("DB_HOST"),
-        "PORT": config("DB_PORT"),
+        "ENGINE": config("DB_ENGINE", "django.db.backends.postgresql"),
+        "NAME": config("DB_NAME", ""),
+        "USER": config("DB_USER", ""),
+        "PASSWORD": config("DB_PASSWORD", ""),
+        "HOST": config("DB_HOST", ""),
+        "PORT": config("DB_PORT", ""),
     }
 }
 

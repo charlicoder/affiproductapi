@@ -1,15 +1,13 @@
 # Dockerfile.dev - Development Environment
 FROM python:3.12-slim
 
-# Set environment variables
 ENV PYTHONDONTWRITEBYTECODE=1 \
     PYTHONUNBUFFERED=1 \
     DEBIAN_FRONTEND=noninteractive
 
-# Set work directory
 WORKDIR /app
 
-# Install system dependencies
+# System deps
 RUN apt-get update && apt-get install -y \
     build-essential \
     libpq-dev \
@@ -18,19 +16,18 @@ RUN apt-get update && apt-get install -y \
     && rm -rf /var/lib/apt/lists/*
 
 # Install Python dependencies
-COPY requirements/dev.txt /app/requirements/
-RUN pip install --no-cache-dir -r requirements/dev.txt
+COPY requirements/base.txt requirements/prod.txt requirements/dev.txt /app/requirements/
+RUN pip install --no-cache-dir -r /app/requirements/prod.txt
 
-# Copy project files
+# Copy project
 COPY . /app/
 
-# Create non-root user for development
+# Non-root user
 RUN useradd --create-home --shell /bin/bash django && \
     chown -R django:django /app
 USER django
 
-# Expose port
 EXPOSE 8000
 
-# Command for development server with auto-reload
-CMD ["python", "manage.py", "runserver", "0.0.0.0:8000"]
+# Gunicorn with reload (dev-friendly)
+CMD ["gunicorn", "core.wsgi:application", "--bind", "0.0.0.0:8000", "--reload"]
