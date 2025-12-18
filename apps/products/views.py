@@ -3,6 +3,7 @@ from rest_framework import viewsets, status, filters
 from rest_framework.decorators import action
 from rest_framework.response import Response
 from django_filters.rest_framework import DjangoFilterBackend
+from rest_framework.permissions import IsAuthenticatedOrReadOnly
 from django.db.models import Q
 from django.shortcuts import get_object_or_404
 
@@ -108,6 +109,9 @@ class ProductViewSet(viewsets.ModelViewSet):
     """
     ViewSet for Product operations
     """
+
+    permission_classes = [IsAuthenticatedOrReadOnly]
+
     queryset = Product.objects.select_related(
         'brand', 'category', 'sub_category', 'platform',
     ).prefetch_related('tags', 'images', 'videos').filter(
@@ -242,6 +246,7 @@ class CategoryViewSet(viewsets.ReadOnlyModelViewSet):
     filter_backends = [filters.SearchFilter, filters.OrderingFilter]
     search_fields = ['name']
     ordering = ['name']
+    permission_classes = [IsAuthenticatedOrReadOnly]
 
     @action(detail=True, methods=['get'])
     def subcategories(self, request, pk=None):
@@ -260,6 +265,7 @@ class SubCategoryViewSet(viewsets.ReadOnlyModelViewSet):
     filterset_fields = ['category']
     search_fields = ['name', 'category__name']
     ordering = ['name']
+    permission_classes = [IsAuthenticatedOrReadOnly]
 
 
 class BrandViewSet(viewsets.ReadOnlyModelViewSet):
@@ -269,6 +275,7 @@ class BrandViewSet(viewsets.ReadOnlyModelViewSet):
     filter_backends = [filters.SearchFilter, filters.OrderingFilter]
     search_fields = ['name']
     ordering = ['name']
+    permission_classes = [IsAuthenticatedOrReadOnly]
 
 
 class PlatformViewSet(viewsets.ReadOnlyModelViewSet):
@@ -278,6 +285,7 @@ class PlatformViewSet(viewsets.ReadOnlyModelViewSet):
     filter_backends = [filters.SearchFilter, filters.OrderingFilter]
     search_fields = ['name']
     ordering = ['name']
+    permission_classes = [IsAuthenticatedOrReadOnly]
 
 
 class TagViewSet(viewsets.ReadOnlyModelViewSet):
@@ -287,4 +295,5 @@ class TagViewSet(viewsets.ReadOnlyModelViewSet):
     filter_backends = [filters.SearchFilter, filters.OrderingFilter]
     search_fields = ['name']
     ordering = ['name']
+    permission_classes = [IsAuthenticatedOrReadOnly]
     
