@@ -7,6 +7,9 @@ services:
       dockerfile: Dockerfile.dev
     volumes:
       - .:/app
+      - ./db:/home/ubuntu/productsapi/db
+      - ./staticfiles:/home/ubuntu/productsapi/staticfiles
+      - ./mediafiles:/home/ubuntu/productsapi/mediafiles
     ports:
       - "8000:8000"
     env_file:

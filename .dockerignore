@@ -30,7 +30,7 @@ coverage.xml
 .vscode/
 node_modules/
 *.sqlite3
-media/
+mediafiles/
 staticfiles/
 data
 db

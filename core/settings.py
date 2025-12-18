@@ -70,8 +70,8 @@ WSGI_APPLICATION = "core.wsgi.application"
 
 DATABASES = {
     "default": {
-        "ENGINE": config("DB_ENGINE", "django.db.backends.postgresql"),
-        "NAME": config("DB_NAME", ""),
+        "ENGINE": config("DB_ENGINE", "django.db.backends.sqlite3"),
+        "NAME": config("DB_NAME", "db/db1111.sqlite3"),
         "USER": config("DB_USER", ""),
         "PASSWORD": config("DB_PASSWORD", ""),
         "HOST": config("DB_HOST", ""),
@@ -113,11 +113,11 @@ USE_TZ = True
 
 STATIC_URL = "static/"
 STATICFILES_DIRS = [BASE_DIR / "static"]
-# STATIC_ROOT = BASE_DIR / "staticfiles"
-STATIC_ROOT = "/home/ubuntu/productsapi/staticfiles"
+STATIC_ROOT = BASE_DIR / "staticfiles"
+
 
 MEDIA_URL = "/media/"
-MEDIA_ROOT = "/home/ubuntu/productsapi/mediafiles"
+MEDIA_ROOT = BASE_DIR / "mediafiles"
 
 DEFAULT_AUTO_FIELD = "django.db.models.BigAutoField"
 
