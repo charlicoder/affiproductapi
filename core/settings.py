@@ -68,14 +68,21 @@ TEMPLATES = [
 WSGI_APPLICATION = "core.wsgi.application"
 
 
+# DATABASES = {
+#     "default": {
+#         "ENGINE": config("DB_ENGINE", "django.db.backends.sqlite3"),
+#         "NAME": config("DB_NAME", "db/db1111.sqlite3"),
+#         "USER": config("DB_USER", ""),
+#         "PASSWORD": config("DB_PASSWORD", ""),
+#         "HOST": config("DB_HOST", ""),
+#         "PORT": config("DB_PORT", ""),
+#     }
+# }
+
 DATABASES = {
     "default": {
-        "ENGINE": config("DB_ENGINE", "django.db.backends.sqlite3"),
-        "NAME": config("DB_NAME", "db/db1111.sqlite3"),
-        "USER": config("DB_USER", ""),
-        "PASSWORD": config("DB_PASSWORD", ""),
-        "HOST": config("DB_HOST", ""),
-        "PORT": config("DB_PORT", ""),
+        "ENGINE": "django.db.backends.sqlite3",
+        "NAME": BASE_DIR / "db/db1111.sqlite3",
     }
 }
 
